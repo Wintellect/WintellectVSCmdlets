@@ -4,7 +4,7 @@ With Visual Studio 2012 dropping support for macros, the only way to do simple c
 
 Because I've written numerous small macros, and use them on a daily basis, I was not looking forward to the extra effort to turn them into a VSIX. Fortunately, Visual Studio 2012 has the wonderful NuGet package manager built in so I converted my macros into PowerShell. While not as convenient as macros, they do work. You can read more about converting macros into PowerShell on my [blog ](http://www.wintellect.com/cs/blogs/jrobbins/archive/2012/03/30/using-nuget-powershell-to-replace-missing-macros-in-dev-11.aspx).
 
-These macros/cmdlets work for both Visual Studio 2012 and Visual Studio 2010.Please fork and let me know if there's any bugs you find. I hope you find them useful.
+These macros/cmdlets work for Visual Studio 2010 and higher. Please fork and let me know if there's any bugs you find. I hope you find them useful.
 
 Here's the about text showing all cmdlets. Of course, all cmdlets have detailed help for more information.
 
