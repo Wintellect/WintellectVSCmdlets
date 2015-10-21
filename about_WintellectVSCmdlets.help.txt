@@ -14,7 +14,7 @@ LONG DESCRIPTION
     sufficient for many of your customization needs. Most of these cmdlets are ports of VB.NET macros that 
     John Robbins has shown on his blog and books.
     
-    All cmdlets work with both Visual Studio 2010 and Visual Studio 2012.
+    All cmdlets work with Visual Studio 2010 through Visual Studio 2015.
     
     Note that these cmdlets support C#, VB, and native C++. They probably support more but those were
     all the languages tested.
@@ -51,7 +51,7 @@ LONG DESCRIPTION
         Invoke-NamedParameter                           A wonderful cmdlet that lets you easily call methods with many
                                                         optional parameters. Full credit to Jason Archer for this cmdlet.
         
-        Invoke-WinDBG                                   VS 2010/2012 have ease of use, where WinDBG (with SOS + SOSEX) have 
+        Invoke-WinDBG                                   Visual Studio has ease of use, where WinDBG (with SOS + SOSEX) have 
                                                         tons of power to tell you what's going on in your application. This
                                                         cmdlet starts WinDBG on the process you're currently debugging in the
                                                         IDE so you can have the best of both worlds.
@@ -61,7 +61,7 @@ LONG DESCRIPTION
                                                         look at your debugging session.
 
 SEE ALSO
-    Online help and updates: http://www.wintellect.com/CS/blogs/jrobbins/default.aspx
+    Online help and updates: http://www.wintellect.com/devcenter/author/jrobbins
     Add-BreakpointsOnAllDocMethods
     Remove-BreakpointsOnAllDocMethods
     Add-InterestingThreadFilterToBreakpoints

@@ -1,10 +1,10 @@
 # Wintellect VS Cmdlets Module #
 
-With Visual Studio 2012 dropping support for macros, the only way to do simple customizations is to download the VS SDK, write a VSIX, and have VS debugging VS. Personally, I find it ridiculous that we can no longer do simple extensibility in our main tool.
+With Visual Studio dropping support for macros way back in VS 2012, the only way to do simple customizations is to download the VS SDK, write a VSIX, and have VS debugging VS. Personally, I find it ridiculous that we can no longer do simple extensibility in our main tool.
 
-Because I've written numerous small macros, and use them on a daily basis, I was not looking forward to the extra effort to turn them into a VSIX. Fortunately, Visual Studio 2012 has the wonderful NuGet package manager built in so I converted my macros into PowerShell. While not as convenient as macros, they do work. You can read more about converting macros into PowerShell on my [blog ](http://www.wintellect.com/cs/blogs/jrobbins/archive/2012/03/30/using-nuget-powershell-to-replace-missing-macros-in-dev-11.aspx).
+Because I've written numerous small macros, and use them on a daily basis, I was not looking forward to the extra effort to turn them into a VSIX. Fortunately, Visual Studio has the wonderful NuGet package manager built in so I converted my macros into PowerShell. While not as convenient as macros, they do work. You can read more about converting macros into PowerShell on my [blog ](http://www.wintellect.com/devcenter/jrobbins/using-nuget-powershell-to-replace-missing-macros-in-dev-11).
 
-These macros/cmdlets work for both Visual Studio 2012 and Visual Studio 2010.Please fork and let me know if there's any bugs you find. I hope you find them useful.
+These macros/cmdlets work for Visual Studio 2010 through Visual Studio 2015.Please fork and let me know if there's any bugs you find. I hope you find them useful.
 
 Here's the about text showing all cmdlets. Of course, all cmdlets have detailed help for more information.
 
@@ -24,7 +24,7 @@ Here's the about text showing all cmdlets. Of course, all cmdlets have detailed 
 	    sufficient for many of your customization needs. Most of these cmdlets are ports of VB.NET macros that 
 	    John Robbins has shown on his blog and books.
 	    
-	    All cmdlets work with both Visual Studio 2010 and Visual Studio 2012.
+	    All cmdlets work with Visual Studio 2010 through Visual Studio 2015.
 	    
 	    Note that these cmdlets support C#, VB, and native C++. They probably support more but those were
 	    all the languages tested.
@@ -61,17 +61,18 @@ Here's the about text showing all cmdlets. Of course, all cmdlets have detailed 
 	        Invoke-NamedParameter                           A wonderful cmdlet that lets you easily call methods with many
 	                                                        optional parameters. Full credit to Jason Archer for this cmdlet.
 	        
-	        Invoke-WinDBG                                   VS 2010/2012 have ease of use, where WinDBG (with SOS + SOSEX) have 
-	                                                        tons of power to tell you what's going on in your application. This
-	                                                        cmdlet starts WinDBG on the process you're currently debugging in the
-	                                                        IDE so you can have the best of both worlds.
+            Invoke-WinDBG                                   Visual Studio has ease of use, where WinDBG (with SOS + SOSEX) have 
+                                                            tons of power to tell you what's going on in your application. This
+                                                            cmdlet starts WinDBG on the process you're currently debugging in the
+                                                            IDE so you can have the best of both worlds.
+
 	                                                        
 	        Open-LastIntelliTraceRecording                  When you stop debugging, your current IntelliTrace log disappears. This
 	                                                        cmdlet fixes that by opening the last log you produced so you can post-mortem
 	                                                        look at your debugging session.
 	
 	SEE ALSO
-	    Online help and updates: http://www.wintellect.com/CS/blogs/jrobbins/default.aspx
+	    Online help and updates: http://www.wintellect.com/devcenter/author/jrobbins
 	    Add-BreakpointsOnAllDocMethods
 	    Remove-BreakpointsOnAllDocMethods
 	    Add-InterestingThreadFilterToBreakpoints

@@ -309,6 +309,8 @@ function Script:RecurseCodeElements($elems, $bpHash , $srcFile, $tagValue)
 {    
     foreach ($currElem in $elems)
     {
+        $currElem = Get-Interface $currElem ([EnvDTE80.CodeElement2])
+        
         # vsCMElement.vsCMElementClass = 1
         # vsCMElement.vsCMElementNamespace = 5
         # vsCMElement.vsCMElement = 11
@@ -326,10 +328,7 @@ function Script:RecurseCodeElements($elems, $bpHash , $srcFile, $tagValue)
             
             if ($subCodeElems -ne $null)
             {
-                if ($subCodeElems.Count -gt 0)
-                {
-                    RecurseCodeElements $subCodeElems $bpHash $srcFile $tagValue
-                }
+                RecurseCodeElements $subCodeElems $bpHash $srcFile $tagValue
             }
         }
         # vsCMElement.vsCMElementFunction = 2
@@ -395,7 +394,6 @@ function script:GetActiveDocument
         return $null
     }
     $activeDoc
-
 }
 
 function Add-BreakpointsOnAllDocMethods
@@ -423,9 +421,10 @@ is easy with this cmdlet.
     # hash that bad boy to make it faster.
     $bpHash = @{}
     
-    Get-Breakpoints | ForEach-Object { $bpHash[$_.File + $_.FileLine.ToString()] = $_.FileLine}
+    Get-Breakpoints | ForEach-Object { $bpHash[$_.File + $_.FileLine.ToString()] = $_.FileLine }
     
-    $codeElements = $activeDoc.ProjectItem.FileCodeModel.CodeElements
+    $fileCodeModel2 = Get-Interface $activeDoc.ProjectItem.FileCodeModel ([ENVDTE80.FileCodeModel2])
+    $codeElements = $fileCodeModel2.CodeElements
     RecurseCodeElements $codeElements $bpHash $srcFile $tagValue
 }
 
@@ -452,7 +451,7 @@ Removes breakpoints previously set with Add-BreakpointsOnAllMethods
     $srcFile = $activeDoc.FullName 
     $tagValue = "Wintellect Rocks! " + $srcFile 
     
-    Get-Breakpoints | Where-Object { $_.Tag -eq $tagValue } | ForEach-Object {$_.Delete()}
+    Get-Breakpoints | Where-Object { $_.Tag -eq $tagValue } | ForEach-Object { $_.Delete() }
 }
 
 Export-ModuleMember -function Remove-BreakpointsOnAllDocMethods 
@@ -524,24 +523,48 @@ http://www.wintellect.com/CS/blogs/jrobbins/archive/2009/10/19/vs-2010-beta-2-in
         return $null
     }
 
+    $dir = $null
+
     $ver = $dte.Version
-    $regPath = "HKCU:\Software\Microsoft\VisualStudio\$ver\DialogPage\Microsoft.VisualStudio.TraceLogPackage.ToolsOptionAdvanced"
-    if ( !(Test-Path $regPath ) -or
-       ( (Get-ItemProperty -Path $regPath)."SaveRecordings" -eq "False") )
+    if ($ver -lt "14.0")
     {
-        Write-Warning "You must set IntelliTrace to save the recordings."
-        Write-Warning "Go to Tools/Options/IntelliTrace/Advanced and check 'Store IntelliTrace recordings in this directory'"
-        return 
-    }
+        $regPath = "HKCU:\Software\Microsoft\VisualStudio\$ver\DialogPage\Microsoft.VisualStudio.TraceLogPackage.ToolsOptionAdvanced"
+        if ( !(Test-Path $regPath ) -or
+            ( (Get-ItemProperty -Path $regPath)."SaveRecordings" -eq "False") )
+        {
+            Write-Warning "You must set IntelliTrace to save the recordings."
+            Write-Warning "Go to Tools/Options/IntelliTrace/Advanced and check 'Store IntelliTrace recordings in this directory'"
+            return 
+        }
     
-    if ( !(Test-RegistryValue $regPath "RecordingPath") )
+        if ( !(Test-RegistryValue $regPath "RecordingPath") )
+        {
+            Write-Warning "The RecordingPath property does not exist or is not set."
+            return
+        }
+    
+        $dir = (Get-ItemProperty -Path $regPath)."RecordingPath"
+    }
+    else
     {
-        Write-Warning "The RecordingPath property does not exist or is not set."
-        return
+        $regPath = "HKCU:\SOFTWARE\Microsoft\VisualStudio\$ver\ApplicationPrivateSettings\Microsoft\VisualStudio\TraceLogPackage\ToolsOptionAdvanced"
+        if ( !(Test-Path $regPath) -or
+              ((Get-ItemProperty -Path $regPath)."SaveRecordings" -match "False"))
+        {
+            Write-Warning "You must set IntelliTrace to save the recordings."
+            Write-Warning "Go to Tools/Options/IntelliTrace/Advanced and check 'Store IntelliTrace recordings in this directory'"
+            return 
+        }
+
+        if ( !(Test-RegistryValue $regPath "RecordingPath") )
+        {
+            Write-Warning "The RecordingPath property does not exist or is not set."
+            return
+        }
+    
+        $dir = ((Get-ItemProperty -Path $regPath)."RecordingPath").Substring("1*System.String*".Length)     
     }
-    
-    $dir = (Get-ItemProperty -Path $regPath)."RecordingPath"
-    
+
     # Get all the filenames from the recording path.
     $fileNames = Get-ChildItem -Path $dir | Sort-Object LastWriteTime -Descending
     if ($fileNames -ne $null)
