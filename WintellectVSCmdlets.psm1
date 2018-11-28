@@ -39,6 +39,38 @@ Export-ModuleMember -function Get-Threads
 ###############################################################################
 
 ###############################################################################
+function Debug-IISProcess
+{
+<#
+.SYNOPSIS
+Attaches Visual Studio to the w3wp.exe process associated with a given application pool name.
+#>
+
+    param (
+        [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [String]$AppPoolName
+    ) 
+
+    $process = Get-WmiObject -Namespace "root/cimv2" -Query "SELECT * FROM Win32_Process where Name = 'w3wp.exe'" |  Where-Object { $_.CommandLine -match "-ap `"$AppPoolName`"" } 
+
+    if ($process -eq $null) {
+        Write-Host "Could not find w3wp.exe process associated with app pool '$AppPoolName'."
+    } else {
+        Write-Host "Attaching to w3wp.exe process associated with app pool '$AppPoolName'."
+        
+        foreach ($proc in $dte.Debugger.LocalProcesses) {
+            if ($proc.ProcessID -eq $process.ProcessId){
+                $proc.Attach()
+                break
+            }
+        }    
+    }
+}
+
+Export-ModuleMember -function Debug-IISProcess
+###############################################################################
+
+###############################################################################
 function Get-Breakpoints
 {
 <#
