@@ -70,6 +70,8 @@ Here's the about text showing all cmdlets. Of course, all cmdlets have detailed 
 	        Open-LastIntelliTraceRecording                  When you stop debugging, your current IntelliTrace log disappears. This
 	                                                        cmdlet fixes that by opening the last log you produced so you can post-mortem
 	                                                        look at your debugging session.
+															
+			Get-AppPools									Returns the names of all IIS application pools.
 	
 	SEE ALSO
 	    Online help and updates: http://www.wintellect.com/devcenter/author/jrobbins

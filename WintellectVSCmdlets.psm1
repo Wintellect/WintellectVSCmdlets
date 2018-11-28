@@ -15,6 +15,22 @@
 Set-StrictMode -version Latest
 
 ###############################################################################
+function Get-AppPools
+{
+<#
+.SYNOPSIS
+Returns the names of all IIS application pools.
+#>
+
+  cd C:\windows\system32\inetsrv
+  
+  .\appcmd list apppool | foreach { $_ | Select-String -pattern '".*"' } | foreach { $_.Matches.Value } | Sort-Object
+}
+
+Export-ModuleMember -function Get-AppPools
+###############################################################################
+
+###############################################################################
 function Get-Threads
 {
 <#
